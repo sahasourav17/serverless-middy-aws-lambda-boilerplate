@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: My Lambda Function
+ 
+Resources:
+  MyLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Timeout: 60
+      CodeUri: .
+      FunctionName: myLambdaFunction
+      Events:
+        GetApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: get
+ 
+        PostApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: post
+ 
+        PutApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: put
+
+        DeleteApi:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: delete
