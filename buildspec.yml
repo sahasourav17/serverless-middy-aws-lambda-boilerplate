@@ -1,26 +1,32 @@
-# Do not change version. This is the version of aws buildspec, not the version of your buldspec file.
 version: 0.2
+
+env:
+  variables:
+    FUNCTION_NAME: "my-lambda-function"
+    S3_BUCKET_NAME: "sshriobucket"
 
 phases:
   install:
-    runtime-versions:
-      nodejs: 18  
-  pre_build:
     commands:
-      - echo Installing source NPM dependencies...
-      - cd src && npm install
+      - echo "Installing dependencies..."
+      - cd $CODEBUILD_SRC_DIR/src
+      - cp .env.dev .env
+      - npm install
+
   build:
     commands:
-      - echo Build started on `date`
-      - echo Compiling the Node.js code
+      - echo "Building the Lambda package..."
+      - zip -r package.zip ./ -x "package*" ".git*"
+
   post_build:
     commands:
-      - echo Build completed on `date`
-# Include only the files required for your application to run.
-# Do not use recursively include artifacts from node_modules directory as it will include unnecessary packages 
-# used only for building and testing.
-# ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
+      - echo "Uploading to S3..."
+      - aws s3 cp package.zip s3://$S3_BUCKET_NAME/build_output.zip # Upload the package to S3
+      - echo "S3 upload complete."
+      - echo "Updating Lambda function..."
+      - aws lambda update-function-code --function-name $FUNCTION_NAME --s3-bucket $S3_BUCKET_NAME --s3-key build_output.zip
+      - echo "Lambda function updated successfully."
+
 artifacts:
   files:
-    - /*
-    
+    - src/package.zip
