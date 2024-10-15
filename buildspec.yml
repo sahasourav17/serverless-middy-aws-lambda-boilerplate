@@ -22,7 +22,5 @@ phases:
 # ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
 artifacts:
   files:
-    - src/*
-  discard-paths: yes
-  base-directory: src
+    - /*
     
