@@ -10,6 +10,7 @@ phases:
     commands:
       - echo "Installing dependencies..."
       - cd $CODEBUILD_SRC_DIR/src
+      - cp .env.dev .env 
       - npm install
 
   build:
