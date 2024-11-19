@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    FUNCTION_NAME: "my-lambda-function"
-    S3_BUCKET_NAME: "sshriobucket"
+    FUNCTION_NAME: "lambda-middy-boilerplate"
+    S3_BUCKET_NAME: "lambda-middy-boilerplate"
 
 phases:
   install:
