@@ -1,3 +1,4 @@
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const variables = require("../config/variables");
 const { s3 } = require("../services/s3");
 const uploadFile = async (buffer, name, mimeType) => {
@@ -9,18 +10,25 @@ const uploadFile = async (buffer, name, mimeType) => {
     ContentType: mimeType,
   };
 
-  return await s3
-    .putObject(params)
-    .promise()
-    .then((res) => res)
+  console.log("================params ============", params);
+  const command = new PutObjectCommand(params);
+  await s3.send(command);
+  const objectUrl = `https://${variables.bucketName}.s3.amazonaws.com/${name}`;
 
-    .catch((err) => {
-      console.log("Error", err);
-      throw {
-        status: 406,
-        message: err,
-      };
-    });
+  return objectUrl;
+
+  //   return await s3
+  //     .putObject(params)
+  //     .promise()
+  //     .then((res) => res)
+
+  //     .catch((err) => {
+  //       console.log("Error", err);
+  //       throw {
+  //         status: 406,
+  //         message: err,
+  //       };
+  //     });
 };
 module.exports = {
   uploadFile,
