@@ -5,14 +5,14 @@ exports.uploadImage = async (event) => {
   try {
     const content = event.body;
     const { userId } = event.pathParameters;
-    const assetName = `${userId}_${content.file.filename}`;
-    const fileName = content.file.filename;
+    const assetName = `profile_pictures/${userId}_${content.file.filename}`;
+
+
     const objectUrl = await uploadFile(
       content.file.content,
       assetName,
       content.file.mimetype
     );
-    const url = `https://${bucketName}.s3.${awsRegion}.amazonaws.com/${fileName}`;
     return {
       statusCode: 200,
       headers: {
@@ -20,7 +20,6 @@ exports.uploadImage = async (event) => {
       },
       body: JSON.stringify({
         message: "Successfully uploaded user image",
-        url,
         objectUrl,
       }),
     };
